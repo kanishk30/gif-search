@@ -24,6 +24,10 @@
       </span>
   </div>
   <div class="loader" *ngIf="isSearching && !this.isSearchingComplete"></div>
+  <div *ngIf="search && !isResultPresent">
+    <span>Sorry, we couldn't find any result for <span class="no-result">{{search}}</span>
+    </span>
+  </div>
 
 
   <div class="image-container">

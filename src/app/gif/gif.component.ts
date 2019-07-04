@@ -36,6 +36,8 @@ export class GifComponent implements OnInit {
   limit = 3;
   isSearching = false;
   isSearchingComplete = false;
+  isResultPresent = true;
+
   constructor(private httpClient: HttpClient) {}
   @ViewChild('searchInput') searchInput: ElementRef;
 
@@ -54,13 +56,18 @@ export class GifComponent implements OnInit {
             this.searchResults = next['data'].filter(e => e.title.trim());
             this.isSearchingComplete = true;
             this.isSearching = false;
-            next['data'].forEach(element => {
+            if (next['data'].length === 0) {
+              this.isResultPresent = false;
+            } else {
+              this.isResultPresent = true;
+              next['data'].forEach(element => {
               const object = { gif: '', static: '', url: '', isGIF: true };
               object.static = element.images['480w_still'].url;
               object.gif = element.images['downsized_medium'].url;
               object.url = object.gif;
               this.imageData.push(object);
-            });
+              });
+            }
           },
           error => {
             this.isSearching = false;
@@ -128,6 +135,10 @@ export class GifComponent implements OnInit {
       this.searchResults = next['data'];
       this.isSearchingComplete = true;
       this.isSearching = false;
+      if (next['data'].length === 0) {
+        this.isResultPresent = false;
+      } else {
+        this.isResultPresent = true;
         next['data'].forEach(element => {
           const object = { gif: '', static: '', url: '', isGIF: true };
           object.static = element.images['480w_still'].url;
@@ -136,6 +147,7 @@ export class GifComponent implements OnInit {
           this.imageData.push(object);
         });
         this.searchAll()
+      }
     },
     error => {
       this.isSearching = false;
