@@ -77,6 +77,12 @@ export class GifComponent implements OnInit {
       });
   }
 
+  initialize() {
+    this.search = '';
+    this.searchResults = [];
+    this.displayResults = false;
+  }
+
   searchGetCall(term: string, limit = this.limit) {
     this.imageData.length = 0;
     this.image.length = 0;
