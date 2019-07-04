@@ -22,6 +22,7 @@ import {
   styleUrls: ['./gif.component.scss']
 })
 export class GifComponent implements OnInit {
+  
   search = '';
   imageData = [];
   image = [];
@@ -31,7 +32,8 @@ export class GifComponent implements OnInit {
   fetchAll = false;
   displayResults = false;
   searchTextChanged = new Subject<string>();
-
+  limits = [3, 6, 9, 12, 15, 20, 25];
+  limit = 3;
   constructor(private httpClient: HttpClient) {}
   @ViewChild('searchInput') searchInput: ElementRef;
 
@@ -62,14 +64,14 @@ export class GifComponent implements OnInit {
       });
   }
 
-  searchGetCall(term: string) {
+  searchGetCall(term: string, limit = this.limit) {
     this.imageData.length = 0;
     this.image.length = 0;
     if (term === '') {
       return of([]);
     }
     return this.httpClient.get(
-      `http://api.giphy.com/v1/gifs/search?api_key=SqTgqUiODX49u9n09GE16RmEVuATQM2Q&q=${term}}`
+      `http://api.giphy.com/v1/gifs/search?api_key=SqTgqUiODX49u9n09GE16RmEVuATQM2Q&q=${term}&limit=${Number(limit)}`
     );
   }
 
@@ -109,5 +111,23 @@ export class GifComponent implements OnInit {
 
   searching() {
     this.displayResults = true;
+  }
+
+  handleLimitChanged(limit) {
+    if (!this.search) { return };
+   this.searchGetCall(this.search, limit).subscribe(
+    next => {
+      this.searchResults = next['data'];
+        next['data'].forEach(element => {
+          const object = { gif: '', static: '', url: '', isGIF: true };
+          object.static = element.images['480w_still'].url;
+          object.gif = element.images['downsized_medium'].url;
+          object.url = object.gif;
+          this.imageData.push(object);
+        });
+        this.searchAll()
+    },
+    error => {}
+    );
   }
 }

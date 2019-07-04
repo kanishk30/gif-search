@@ -16,6 +16,12 @@
           <img src="../../assets/search.png" alt="search" width="24px" height="24px">
         </span>
       </span>
+      <span>
+        Select number of results:
+          <select #searchInput [(ngModel)]="limit" (ngModelChange)="handleLimitChanged(limit)">
+            <option *ngFor="let limit of limits" [value]="limit" [label]="limit">{{limit}}</option>
+          </select>
+      </span>
   </div>
 
   <div class="image-container">
