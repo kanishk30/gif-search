@@ -6,9 +6,10 @@
 
 <div class="container">
   <div class="bar">
-      <span class="bill-items">
+      <span class="items">
         <input class="pointer" type="text" #searchInput [(ngModel)]="search" (click)="toggleList()" (keypress)="searching()" placeholder="Search">
-        <div class="bill-items-list" *ngIf="searchResults.length > 0 && displayResults">
+        <div class="backdrop" *ngIf="displayResults" (click)="displayResults=!displayResults;"></div>
+        <div class="items-list" *ngIf="searchResults.length > 0 && displayResults">
           <ng-container *ngFor="let data of searchResults; index as i">
             <div *ngIf="data.title" (click)="selectOne(data, i)" class="title">{{data.title}} </div>
           </ng-container>   
