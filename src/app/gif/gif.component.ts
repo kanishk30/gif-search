@@ -85,6 +85,13 @@ export class GifComponent implements OnInit {
     this.search = '';
     this.searchResults = [];
     this.displayResults = false;
+    this.image = [];
+    this.imageData = [];
+    this.fetchOne = false;
+    this.fetchAll = false;
+    this.isSearching = false;
+    this.isSearchingComplete = false;
+    this.isResultPresent = true;
   }
 
   searchGetCall(term: string, limit = this.limit) {
