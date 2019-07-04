@@ -22,7 +22,6 @@ import {
   styleUrls: ['./gif.component.scss']
 })
 export class GifComponent implements OnInit {
-  
   search = '';
   imageData = [];
   image = [];
@@ -44,9 +43,13 @@ export class GifComponent implements OnInit {
   ngOnInit() {
     fromEvent(this.searchInput.nativeElement, 'keyup')
       .pipe(
+        // Get the value
         map((event: any) => event.target.value),
+        // Trigger search only for more than one character
         filter(result => result.length > 1),
+        // Trigger API request only after 300 milliseconds
         debounceTime(300),
+        // Check if current search term is different from previous one
         distinctUntilChanged()
       )
       .subscribe((text: string) => {
@@ -61,11 +64,11 @@ export class GifComponent implements OnInit {
             } else {
               this.isResultPresent = true;
               next['data'].forEach(element => {
-              const object = { gif: '', static: '', url: '', isGIF: true };
-              object.static = element.images['480w_still'].url;
-              object.gif = element.images['downsized_medium'].url;
-              object.url = object.gif;
-              this.imageData.push(object);
+                const object = { gif: '', static: '', url: '', isGIF: true };
+                object.static = element.images['480w_still'].url;
+                object.gif = element.images['downsized_medium'].url;
+                object.url = object.gif;
+                this.imageData.push(object);
               });
             }
           },
@@ -78,12 +81,14 @@ export class GifComponent implements OnInit {
   }
 
   initialize() {
+    // Like a refresh, when clicked on logo
     this.search = '';
     this.searchResults = [];
     this.displayResults = false;
   }
 
   searchGetCall(term: string, limit = this.limit) {
+    // API request based on search call
     this.imageData.length = 0;
     this.image.length = 0;
     if (term === '') {
@@ -92,17 +97,21 @@ export class GifComponent implements OnInit {
     this.isSearching = true;
     this.isSearchingComplete = false;
     return this.httpClient.get(
-      `http://api.giphy.com/v1/gifs/search?api_key=SqTgqUiODX49u9n09GE16RmEVuATQM2Q&q=${term}&limit=${Number(limit)}`
+      `http://api.giphy.com/v1/gifs/search?api_key=SqTgqUiODX49u9n09GE16RmEVuATQM2Q&q=${term}&limit=${Number(
+        limit
+      )}`
     );
   }
 
   searchAll() {
+    // When clicked on search icon, request all images
     this.fetchOne = false;
     this.fetchAll = true;
     this.displayResults = false;
   }
 
   selectOne(data, index) {
+    // Select from the list to fetch image
     this.image.length = 0;
     this.fetchOne = true;
     this.fetchAll = false;
@@ -111,6 +120,7 @@ export class GifComponent implements OnInit {
   }
 
   replaceImage(index, source) {
+    // To convert GIF to JPG and vice-versa
     let arr = [];
     arr = source === 'one' ? [...this.image] : [...this.imageData];
     const tempURL = arr[index]['static'];
@@ -125,40 +135,45 @@ export class GifComponent implements OnInit {
   }
 
   toggleList() {
+    // Show hide the list
     if (this.search) {
       this.displayResults = !this.displayResults;
     }
   }
 
   searching() {
+    // Fetch results
     this.displayResults = true;
   }
 
   handleLimitChanged(limit) {
-    if (!this.search) { return };
-   this.searchGetCall(this.search, limit).subscribe(
-    next => {
-      this.searchResults = next['data'];
-      this.isSearchingComplete = true;
-      this.isSearching = false;
-      if (next['data'].length === 0) {
-        this.isResultPresent = false;
-      } else {
-        this.isResultPresent = true;
-        next['data'].forEach(element => {
-          const object = { gif: '', static: '', url: '', isGIF: true };
-          object.static = element.images['480w_still'].url;
-          object.gif = element.images['downsized_medium'].url;
-          object.url = object.gif;
-          this.imageData.push(object);
-        });
-        this.searchAll()
-      }
-    },
-    error => {
-      this.isSearching = false;
-      this.isSearchingComplete = true;
+    // On changing the limits
+    if (!this.search) {
+      return;
     }
+    this.searchGetCall(this.search, limit).subscribe(
+      next => {
+        this.searchResults = next['data'];
+        this.isSearchingComplete = true;
+        this.isSearching = false;
+        if (next['data'].length === 0) {
+          this.isResultPresent = false;
+        } else {
+          this.isResultPresent = true;
+          next['data'].forEach(element => {
+            const object = { gif: '', static: '', url: '', isGIF: true };
+            object.static = element.images['480w_still'].url;
+            object.gif = element.images['downsized_medium'].url;
+            object.url = object.gif;
+            this.imageData.push(object);
+          });
+          this.searchAll();
+        }
+      },
+      error => {
+        this.isSearching = false;
+        this.isSearchingComplete = true;
+      }
     );
   }
 }
