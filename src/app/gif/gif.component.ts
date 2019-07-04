@@ -34,6 +34,8 @@ export class GifComponent implements OnInit {
   searchTextChanged = new Subject<string>();
   limits = [3, 6, 9, 12, 15, 20, 25];
   limit = 3;
+  isSearching = false;
+  isSearchingComplete = false;
   constructor(private httpClient: HttpClient) {}
   @ViewChild('searchInput') searchInput: ElementRef;
 
@@ -50,7 +52,8 @@ export class GifComponent implements OnInit {
           next => {
             // trim is used to filter out the result having no title
             this.searchResults = next['data'].filter(e => e.title.trim());
-
+            this.isSearchingComplete = true;
+            this.isSearching = false;
             next['data'].forEach(element => {
               const object = { gif: '', static: '', url: '', isGIF: true };
               object.static = element.images['480w_still'].url;
@@ -59,7 +62,10 @@ export class GifComponent implements OnInit {
               this.imageData.push(object);
             });
           },
-          error => {}
+          error => {
+            this.isSearching = false;
+            this.isSearchingComplete = true;
+          }
         );
       });
   }
@@ -70,6 +76,8 @@ export class GifComponent implements OnInit {
     if (term === '') {
       return of([]);
     }
+    this.isSearching = true;
+    this.isSearchingComplete = false;
     return this.httpClient.get(
       `http://api.giphy.com/v1/gifs/search?api_key=SqTgqUiODX49u9n09GE16RmEVuATQM2Q&q=${term}&limit=${Number(limit)}`
     );
@@ -118,6 +126,8 @@ export class GifComponent implements OnInit {
    this.searchGetCall(this.search, limit).subscribe(
     next => {
       this.searchResults = next['data'];
+      this.isSearchingComplete = true;
+      this.isSearching = false;
         next['data'].forEach(element => {
           const object = { gif: '', static: '', url: '', isGIF: true };
           object.static = element.images['480w_still'].url;
@@ -127,7 +137,10 @@ export class GifComponent implements OnInit {
         });
         this.searchAll()
     },
-    error => {}
+    error => {
+      this.isSearching = false;
+      this.isSearchingComplete = true;
+    }
     );
   }
 }

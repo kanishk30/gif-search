@@ -23,6 +23,8 @@
           </select>
       </span>
   </div>
+  <div class="loader" *ngIf="isSearching && !this.isSearchingComplete"></div>
+
 
   <div class="image-container">
     <ng-container *ngIf="fetchOne">

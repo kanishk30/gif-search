@@ -104,6 +104,8 @@ select {
 .result-image {
   object-fit: cover;
   object-position: center;
+  background: transparent url('../../assets/loader.gif') center no-repeat;
+  cursor: pointer;
 }
 
 .search-icon {
@@ -112,3 +114,24 @@ select {
   left: 98%;
   top: 17%;
 }
+
+.loader {
+    border-top: 1rem solid red;
+    border-bottom: 1rem solid green;
+    border-left: 1rem solid blue;
+    border-right: 1rem solid yellow;
+    border-radius: 50%;
+    width: 7rem;
+    height: 7rem;
+    animation: spin 2s linear infinite;
+    margin: auto;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
