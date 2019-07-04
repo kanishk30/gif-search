@@ -1,0 +1,33 @@
+
+<div class="header">
+  <span>GIF'ted for Go-JEK</span>
+</div>
+
+<div class="container">
+  <div class="bar">
+      <span class="bill-items">
+        <input class="pointer" type="text" #searchInput [(ngModel)]="search" (click)="toggleList()" (keypress)="searching()" placeholder="Search">
+        <div class="bill-items-list" *ngIf="searchResults.length > 0 && displayResults">
+          <ng-container *ngFor="let data of searchResults; index as i">
+            <div *ngIf="data.title" (click)="selectOne(data, i)" class="title">{{data.title}} </div>
+          </ng-container>   
+        </div>
+        <span class="search-icon" (click)="searchAll()">
+          <img src="../../assets/search.png" alt="search" width="24px" height="24px">
+        </span>
+      </span>
+  </div>
+
+  <div class="image-container">
+    <ng-container *ngIf="fetchOne">
+      <div (click)="replaceImage(i, 'one')" class="image" *ngFor="let data of image; index as i">
+          <img [src]="data.url" [alt]="data.title" class="result-image"></div>
+    </ng-container>
+
+    <ng-container *ngIf="fetchAll">
+      <div (click)="replaceImage(i, 'all')" class="image" *ngFor="let data of imageData; index as i">
+          <img [src]="data.url" [alt]="data.title" class="result-image">
+      </div>   
+    </ng-container>
+  </div>
+</div>
