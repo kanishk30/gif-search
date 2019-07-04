@@ -149,8 +149,9 @@ export class GifComponent implements OnInit {
   }
 
   searching() {
-    // Fetch results
+    // On key press, show list of suggestions
     this.displayResults = true;
+    this.imageData = [];
   }
 
   handleLimitChanged(limit) {
