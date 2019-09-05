@@ -1,6 +1,6 @@
 <div class="header">
   <img src="../../assets/logo.png" alt="logo" height="48px" width="48px" (click)="initialize()" class="pointer">
-  <span>GIF'ted for Go-JEK</span>
+  <span>GIF'ted</span>
 </div>
 
 <div class="container">
@@ -25,7 +25,7 @@
           </select>
       </span>
   </div>
-  <div class="loader" *ngIf="isSearching && isSearchingComplete"></div>
+  <div class="loader" *ngIf="isSearching && !isSearchingComplete"></div>
   <div *ngIf="search && !isResultPresent && isSearchingComplete">
     <span>Sorry, we couldn't find any result for
       <span class="no-result">{{search}}</span>
@@ -37,13 +37,20 @@
     <ng-container *ngIf="fetchOne">
       <div (click)="replaceImage(i, 'one')" class="image" *ngFor="let data of image; index as i">
         <img [src]="data.url" [alt]="data.title" class="result-image">
+      <div>
+        <button (click)="btnClicked(data)">{{data.isLiked ? 'Liked' : 'Like'}}</button>
+      </div>
       </div>
     </ng-container>
 
     <ng-container *ngIf="fetchAll">
       <div (click)="replaceImage(i, 'all')" class="image" *ngFor="let data of imageData; index as i">
         <img [src]="data.url" [alt]="data.title" class="result-image">
-      </div>   
+        <div>
+          <button (click)="btnClicked(data)">{{data.isLiked ? 'Liked' : 'Like'}}</button>
+        </div>  
+      </div> 
+      
     </ng-container>
   </div>
 </div>

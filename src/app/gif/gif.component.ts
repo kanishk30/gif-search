@@ -64,10 +64,12 @@ export class GifComponent implements OnInit {
             } else {
               this.isResultPresent = true;
               next['data'].forEach(element => {
-                const object = { gif: '', static: '', url: '', isGIF: true };
+                const object = { gif: '', static: '', url: '', isGIF: true, isLiked: false, id: '' };
                 object.static = element.images['480w_still'].url;
                 object.gif = element.images['downsized_medium'].url;
                 object.url = object.gif;
+                object.id = element.id;
+                object.isLiked = localStorage.getItem(object.id) === 'true';
                 this.imageData.push(object);
               });
             }
@@ -169,10 +171,12 @@ export class GifComponent implements OnInit {
         } else {
           this.isResultPresent = true;
           next['data'].forEach(element => {
-            const object = { gif: '', static: '', url: '', isGIF: true };
+            const object = { gif: '', static: '', url: '', isGIF: true, isLiked: false, id: '' };
             object.static = element.images['480w_still'].url;
             object.gif = element.images['downsized_medium'].url;
             object.url = object.gif;
+            object.id = element.id;
+            object.isLiked = localStorage.getItem(object.id) === 'true';
             this.imageData.push(object);
           });
           this.searchAll();
@@ -183,5 +187,10 @@ export class GifComponent implements OnInit {
         this.isSearchingComplete = true;
       }
     );
+  }
+
+  btnClicked(data) {
+    data.isLiked = !data.isLiked;
+    localStorage.setItem(data.id, data.isLiked);
   }
 }
